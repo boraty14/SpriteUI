@@ -6,7 +6,7 @@ namespace BratyUI.Drawer
 {
     [CustomEditor(typeof(Transform))]
     [CanEditMultipleObjects]
-    public class NodeBaseTransformDrawer : Editor
+    public class NodeBaseTransformDrawer : UnityEditor.Editor
     {
         public override VisualElement CreateInspectorGUI()
         {
@@ -14,14 +14,10 @@ namespace BratyUI.Drawer
 
             if (((Transform)serializedObject.targetObject).gameObject.TryGetComponent(out NodeBase node))
             {
-                // Add your custom UI elements here
-                // ...
-
                 return root;
             }
 
             return base.CreateInspectorGUI();
-            // If the condition is not met, return the default inspector
         }
     }
 }

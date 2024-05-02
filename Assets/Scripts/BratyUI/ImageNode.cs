@@ -5,6 +5,8 @@ namespace BratyUI
     [RequireComponent(typeof(SpriteRenderer))]
     public class ImageNode : NodeBase
     {
+        [SerializeField] private bool _keepNativeSize;
+        
         private SpriteRenderer _spriteRenderer;
         
         protected override void InitializeNode()

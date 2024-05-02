@@ -1,0 +1,11 @@
+﻿TODO
+- See scaling multiply constant for sliced image
+- Complete get NodePosition
+- Add CUSTOM raycasting and their events, click, drag etc
+- Add ContainerNode
+- Add SCROLL (pooling, dynamic generation, emitting event upward so it can scroll)
+
+
+
+NOTES
+- No child logic, enter yourself (generate for scroll pool)
