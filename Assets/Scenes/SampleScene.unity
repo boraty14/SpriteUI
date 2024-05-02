@@ -727,7 +727,6 @@ MonoBehaviour:
     Pivot: {x: 0.5, y: 0.5}
     Size: {x: 1, y: 1}
     Position: {x: 0, y: 0, z: 0}
-    Scale: {x: 1, y: 1}
 --- !u!212 &2131433011
 SpriteRenderer:
   m_ObjectHideFlags: 0
