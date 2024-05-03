@@ -8,11 +8,19 @@ namespace BratyUI
         [SerializeField] private bool _keepNativeSize;
         
         private SpriteRenderer _spriteRenderer;
-        
-        protected override void InitializeNode()
+
+        public Vector2 Size
         {
-            base.InitializeNode();
+            get => _spriteRenderer.size;
+            set => _spriteRenderer.size = value;
+        }
+
+        protected override void DrawNode()
+        {
+            base.DrawNode();
             _spriteRenderer = GetComponent<SpriteRenderer>();
+            _spriteRenderer.drawMode = SpriteDrawMode.Sliced;
+            Size = NodeData.Size;
         }
     }
 }

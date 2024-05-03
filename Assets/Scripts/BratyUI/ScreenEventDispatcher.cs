@@ -7,17 +7,20 @@ namespace BratyUI
     public class ScreenEventDispatcher : MonoBehaviour
     {
         private Rect _safeArea = new Rect();
-        private Resolution _currentResolution = new Resolution();
+        private int _height;
+        private int _width;
         
         public static event Action OnSafeAreaChange; 
         public static event Action OnResolutionChange; 
 
         private void Update()
         {
-            var resolution = Screen.currentResolution;
-            if (resolution.width != _currentResolution.width || resolution.height != _currentResolution.height)
+            var width = Screen.width;
+            var height = Screen.height;
+            if (width != _width || height != _height)
             {
-                _currentResolution = resolution;
+                _width = width;
+                _height = height;
                 OnResolutionChange?.Invoke();
             }
             

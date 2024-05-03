@@ -2,24 +2,54 @@
 
 namespace BratyUI
 {
+    [ExecuteAlways]
     [DisallowMultipleComponent]
     public abstract class NodeBase : MonoBehaviour
     {
         public NodeData NodeData;
+        protected bool IsDirty;
         
-        protected virtual void OnValidate()
+        private void OnValidate()
         {
-            InitializeNode();
+            IsDirty = true;
         }
 
         protected virtual void Awake()
         {
-            InitializeNode();
-            ScreenEventDispatcher.OnSafeAreaChange += OnSafeAreaChange;
-            ScreenEventDispatcher.OnResolutionChange += OnResolutionChange;
+            IsDirty = true;
         }
 
         protected virtual void OnDestroy()
+        {
+            UnregisterScreenEvents();
+        }
+
+        private void Update()
+        {
+            if (!IsDirty)
+            {
+                return;
+            }
+
+            UnregisterScreenEvents();
+            RegisterScreenEvents();
+            DrawNode();
+            IsDirty = false;
+        }
+        
+        protected virtual void DrawNode()
+        {
+            var rootNode = GetComponentInParent<RootNode>();
+            var position = ScreenHelper.GetNodePosition(NodeData, rootNode.NodeCamera);
+            transform.position = new Vector3(position.x, position.y, transform.position.z);
+        }
+
+        private void RegisterScreenEvents()
+        {
+            ScreenEventDispatcher.OnSafeAreaChange += OnSafeAreaChange;
+            ScreenEventDispatcher.OnResolutionChange += OnResolutionChange;
+        }
+        private void UnregisterScreenEvents()
         {
             ScreenEventDispatcher.OnSafeAreaChange -= OnSafeAreaChange;
             ScreenEventDispatcher.OnResolutionChange -= OnResolutionChange;
@@ -27,20 +57,12 @@ namespace BratyUI
 
         private void OnResolutionChange()
         {
-            InitializeNode();
+            IsDirty = true;
         }
 
         private void OnSafeAreaChange()
         {
-            InitializeNode();
+            IsDirty = true;
         }
-
-        protected virtual void InitializeNode()
-        {
-            var nodeCamera = GetComponentInParent<RootNode>().NodeCamera;
-            var position = ScreenHelper.GetNodePosition(NodeData, nodeCamera);
-            transform.position = new Vector3(position.x, position.y, transform.position.z);
-        }
-        
     }
 }

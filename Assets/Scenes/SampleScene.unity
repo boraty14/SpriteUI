@@ -791,7 +791,7 @@ GameObject:
   - component: {fileID: 2131433011}
   - component: {fileID: 2131433010}
   m_Layer: 0
-  m_Name: ImageNode
+  m_Name: ImageNodea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -828,8 +828,9 @@ MonoBehaviour:
     MinAnchor: {x: 0.5, y: 0.5}
     MaxAnchor: {x: 0.5, y: 0.5}
     Pivot: {x: 0.5, y: 0.5}
-    Size: {x: 1, y: 1}
+    Size: {x: 2, y: 1}
     Position: {x: 0, y: 0, z: 0}
+  _keepNativeSize: 0
 --- !u!212 &2131433011
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -878,8 +879,8 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_DrawMode: 1
+  m_Size: {x: 2, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
