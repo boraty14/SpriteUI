@@ -6,15 +6,17 @@ namespace BratyUI
     public class RootNode : MonoBehaviour
     {
         [SerializeField] private NodeCamera _nodeCamera;
+        private BoxCollider2D _collider;
 
-        private void OnValidate()
+        public bool IsBlocking
         {
-            SetAnchorNodes();
+            get => _collider.enabled;
+            set => _collider.enabled = value;
         }
 
         private void Start()
         {
-            SetAnchorNodes();
+            SetRootNode();
         }
 
         private void OnEnable()
@@ -27,15 +29,17 @@ namespace BratyUI
             UnregisterScreenEvents();
         }
         
-        private void SetAnchorNodes()
+        [ContextMenu("SetRootNode")]
+        private void SetRootNode()
         {
-            var anchors = GetComponentsInChildren<AnchorNode>(true);
-            foreach (var anchor in anchors)
+            _collider = GetComponent<BoxCollider2D>();
+            _collider.size = new Vector2(_nodeCamera.Size * _nodeCamera.Aspect * 2f, _nodeCamera.Size * 2f);
+            
+            var nodes = GetComponentsInChildren<INode>(true);
+            foreach (var node in nodes)
             {
-                var anchorPosition = GetAnchorPosition(anchor.GetAnchor());
-                anchor.SetAnchorPosition(anchorPosition);
+                node.DrawNode(this);
             }
-
         }
 
         public Vector3 GetAnchorPosition(Vector2 anchor)
@@ -43,21 +47,21 @@ namespace BratyUI
             var heightSize = _nodeCamera.Size;
             var widthSize = _nodeCamera.Size * _nodeCamera.Aspect;
 
-            var xPosition = Mathf.Lerp(-widthSize, widthSize, anchor.x);
-            var yPosition = Mathf.Lerp(-heightSize, heightSize, anchor.y);
+            var xPosition = -widthSize + (2 * widthSize * anchor.x);
+            var yPosition = -heightSize + (2 * heightSize * anchor.y);
 
             return new Vector3(xPosition, yPosition, 0f);
         }
         
         private void RegisterScreenEvents()
         {
-            ScreenEventDispatcher.OnSafeAreaChange += SetAnchorNodes;
-            ScreenEventDispatcher.OnResolutionChange += SetAnchorNodes;
+            ScreenEventDispatcher.OnSafeAreaChange += SetRootNode;
+            ScreenEventDispatcher.OnResolutionChange += SetRootNode;
         }
         private void UnregisterScreenEvents()
         {
-            ScreenEventDispatcher.OnSafeAreaChange -= SetAnchorNodes;
-            ScreenEventDispatcher.OnResolutionChange -= SetAnchorNodes;
+            ScreenEventDispatcher.OnSafeAreaChange -= SetRootNode;
+            ScreenEventDispatcher.OnResolutionChange -= SetRootNode;
         }
 
     }

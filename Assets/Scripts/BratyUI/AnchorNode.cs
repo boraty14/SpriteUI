@@ -2,21 +2,20 @@
 
 namespace BratyUI
 {
-    [ExecuteAlways]
     [DisallowMultipleComponent]
-    public class AnchorNode : MonoBehaviour
+    public class AnchorNode : MonoBehaviour, INode
     {
         [SerializeField] private Vector2 _anchor;
         
-        public Vector2 GetAnchor() => _anchor;
         private Vector3 _anchorPosition;
 
-        public void SetAnchorPosition(Vector3 anchorPosition)
+        public void DrawNode(RootNode rootNode)
         {
-            _anchorPosition = anchorPosition;
+            name = $"Anchor - X:{_anchor.x} Y:{_anchor.y}";
+            _anchorPosition = rootNode.GetAnchorPosition(_anchor);
             SetTransform();
         }
-
+        
         private void SetTransform()
         {
             transform.localPosition = _anchorPosition;
@@ -28,17 +27,6 @@ namespace BratyUI
         private static readonly Color AnchorColor = Color.red;
         private static readonly Color AnchorSelectedColor = Color.green;
         private const float AnchorRadius = 0.3f;
-
-        private void OnValidate()
-        {
-            _anchor.x = Mathf.Clamp01(_anchor.x);
-            _anchor.y = Mathf.Clamp01(_anchor.y);
-            name = $"Anchor - X:{_anchor.x} Y:{_anchor.y}";
-            if (transform.parent.TryGetComponent(out RootNode rootNode))
-            {
-                SetAnchorPosition(rootNode.GetAnchorPosition(_anchor));
-            }
-        }
 
         private void OnDrawGizmos()
         {
