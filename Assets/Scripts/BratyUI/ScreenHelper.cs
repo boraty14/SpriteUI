@@ -5,22 +5,23 @@ namespace BratyUI
     public static class ScreenHelper
     {
         // safe area x y is left bottom
-        public static Vector2 GetNodePosition(NodeData nodeData, NodeCamera nodeCamera)
+        public static Vector3 GetNodePosition(NodeData nodeData, NodeData parentNodeData)
         {
-            Rect safeArea = Screen.safeArea;
-            int width = Screen.width;
-            int height = Screen.height;
-
-            var startX = safeArea.x / width;
-            var endX = (safeArea.width - safeArea.x) / width;
-            var widthRange = new Vector2(startX, endX);
+            //without pivot
             
-            var startY = safeArea.y / height;
-            var endY = (safeArea.height - safeArea.y) / height;
-            var heightRange = new Vector2(startY, endY);
-
-            var aspect = nodeCamera.Aspect;
-            var size = nodeCamera.Size;
+            
+            
+            // var parentPosition = parentNodeData.Position;
+            // var parentSize = parentNodeData.Size;
+            // var leftBottom = new Vector2(parentPosition.x - parentSize.x * 0.5f,
+            //     parentPosition.y - parentSize.y * 0.5f);
+            // var rightTop = new Vector2(parentPosition.x + parentSize.x * 0.5f,
+            //     parentPosition.y + parentSize.y * 0.5f);
+            //
+            // var 
+            // float xPosition = 
+            
+            
 
             
             

@@ -1,11 +1,56 @@
-﻿TODO
-- See scaling multiply constant for sliced image
+﻿- keep camera sizing for width/height weight
+- add anchor points on edges and to middle
+
+
+NEEDS
+
+- should be inuitive to use
+- should be performant
+- exact replica or just basic/ primary utility ?
+
+Pain points: stretching/sizing
+
+TODO
+
+two anchor
+    pos
+    size
+    
+    size + anchor diff, if anch = point then size = size
+    
+drawgizmos + drawgizmos selected
+
+
+
+
+
+
+
+
+uinode + uielement ??
+
+
+just handle positioning, rest can be seperate.
+
+
+Change camera size if it is horizontal?
+
+Make it really simple.
+
+
+
+
 - Complete get NodePosition
 - Add CUSTOM raycasting and their events, click, drag etc
 - Add ContainerNode
 - Add SCROLL (pooling, dynamic generation, emitting event upward so it can scroll)
 
+- make the rootnode as a whole scene canvas so you dont need to pass camera around.
+- make pivoting natural
+
+- remove size inspector for sprite renderer
 
 
 NOTES
+- Child logic for anchoring/parenting?
 - No child logic, enter yourself (generate for scroll pool)
