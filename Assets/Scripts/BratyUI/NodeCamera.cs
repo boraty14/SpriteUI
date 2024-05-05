@@ -14,20 +14,20 @@ namespace BratyUI
 
         private void OnValidate()
         {
-            Debug.Log("validate camera");
+            //Debug.Log("validate camera");
             SetCamera();
         }
 
         private void OnEnable()
         {
-            Debug.Log("enable camera");
+            //Debug.Log("enable camera");
             RegisterScreenEvents();
             SetCamera();
         }
 
         private void OnDisable()
         {
-            Debug.Log("disable camera");
+            //Debug.Log("disable camera");
             UnregisterScreenEvents();
         }
 
@@ -46,7 +46,7 @@ namespace BratyUI
         private void SetCamera()
         {
             _camera.orthographicSize = CalculateCameraSize();
-            Debug.LogError($"pixel width {_camera.pixelWidth} scaled pixel width {_camera.scaledPixelWidth}");
+            //Debug.LogError($"pixel width {_camera.pixelWidth} scaled pixel width {_camera.scaledPixelWidth}");
         }
         
         private float CalculateCameraSize()
