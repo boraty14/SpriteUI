@@ -10,8 +10,8 @@ namespace BratyUI
     {
         [SerializeField] private Vector2 _position;
         [SerializeField] private Vector2 _size;
-        [SerializeField] private Vector2 _minAnchor;
-        [SerializeField] private Vector2 _maxAnchor;
+        [SerializeField] private Vector2 _minAnchor = Vector2.zero;
+        [SerializeField] private Vector2 _maxAnchor = Vector2.one;
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private BoxCollider2D _collider;
         
@@ -21,9 +21,17 @@ namespace BratyUI
             _collider = GetComponent<BoxCollider2D>();
             var leftBottom = NodeCanvas.GetAnchorPosition(_minAnchor);
             var rightTop = NodeCanvas.GetAnchorPosition(_maxAnchor);
-            _collider.size = Vector2.one;
+
+            var size = (Vector2)(rightTop - leftBottom);
+            size += _size;
             _spriteRenderer.drawMode = SpriteDrawMode.Sliced;
-            _spriteRenderer.size = Vector2.one;
+            _spriteRenderer.size = size;
+
+            var position = (Vector2)leftBottom + size * 0.5f + _position;
+            transform.localPosition = new Vector3(position.x, position.y, leftBottom.z);
+            transform.localScale = Vector3.one;
+            
+            _collider.size = size;
         }
     }
 }
