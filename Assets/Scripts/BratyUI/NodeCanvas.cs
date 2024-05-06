@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace BratyUI
 {
     [ExecuteAlways]
-    public class RootNode : MonoBehaviour
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(BoxCollider2D))]
+    public class NodeCanvas : MonoBehaviour
     {
         [SerializeField] private NodeCamera _nodeCamera;
         [SerializeField] private BoxCollider2D _collider;
@@ -16,12 +19,12 @@ namespace BratyUI
 
         private void OnValidate()
         {
-            SetRootNode();
+            DrawNodes();
         }
 
         private void OnEnable()
         {
-            SetRootNode();
+            DrawNodes();
             RegisterCameraEvents();
         }
 
@@ -30,7 +33,7 @@ namespace BratyUI
             UnregisterCameraEvents();
         }
         
-        public void SetRootNode()
+        private void DrawNodes()
         {
             if (_nodeCamera == null)
             {
@@ -40,10 +43,10 @@ namespace BratyUI
             _collider = GetComponent<BoxCollider2D>();
             _collider.size = new Vector2(_nodeCamera.Size * _nodeCamera.Aspect * 2f, _nodeCamera.Size * 2f);
             
-            var nodes = GetComponentsInChildren<INode>(true);
+            var nodes = GetComponentsInChildren<NodeBase>(true);
             foreach (var node in nodes)
             {
-                node.DrawNode(this);
+                node.SetDirty();
             }
         }
 
@@ -66,7 +69,7 @@ namespace BratyUI
             }
             
             UnregisterCameraEvents();
-            _nodeCamera.OnNodeCameraUpdate += SetRootNode;
+            _nodeCamera.OnNodeCameraUpdate += DrawNodes;
         }
         private void UnregisterCameraEvents()
         {
@@ -75,8 +78,7 @@ namespace BratyUI
                 return;
             }
             
-            _nodeCamera.OnNodeCameraUpdate -= SetRootNode;
+            _nodeCamera.OnNodeCameraUpdate -= DrawNodes;
         }
-
     }
 }

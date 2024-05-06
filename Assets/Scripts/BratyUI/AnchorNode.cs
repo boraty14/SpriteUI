@@ -3,16 +3,16 @@
 namespace BratyUI
 {
     [DisallowMultipleComponent]
-    public class AnchorNode : MonoBehaviour, INode
+    public class AnchorNode : NodeBase
     {
         [SerializeField] private Vector2 _anchor;
         
         private Vector3 _anchorPosition;
-
-        public void DrawNode(RootNode rootNode)
+        
+        protected override void DrawNode()
         {
             name = $"Anchor - X:{_anchor.x} Y:{_anchor.y}";
-            _anchorPosition = rootNode.GetAnchorPosition(_anchor);
+            _anchorPosition = NodeCanvas.GetAnchorPosition(_anchor);
             SetTransform();
         }
         
@@ -28,12 +28,6 @@ namespace BratyUI
         private static readonly Color AnchorSelectedColor = Color.green;
         private const float AnchorRadius = 0.3f;
 
-        private void OnValidate()
-        {
-            var rootNode = transform.GetComponentInParent<RootNode>();
-            rootNode.SetRootNode();
-        }
-
         private void OnDrawGizmos()
         {
             Gizmos.color = AnchorColor;
@@ -47,5 +41,6 @@ namespace BratyUI
             SetTransform();
         }
 #endif
+        
     }
 }

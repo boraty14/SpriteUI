@@ -4,6 +4,8 @@ using UnityEngine;
 namespace BratyUI
 {
     [ExecuteAlways]
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(Camera))]
     public class NodeCamera : MonoBehaviour
     {
         [SerializeField] private Camera _camera;
@@ -17,21 +19,23 @@ namespace BratyUI
 
         private void OnValidate()
         {
-            //Debug.Log("validate camera");
             _camera = GetComponent<Camera>();
             SetCamera();
         }
 
+        private void OnDrawGizmosSelected()
+        {
+            _camera.orthographicSize = CalculateCameraSize();
+        }
+
         private void OnEnable()
         {
-            //Debug.Log("enable camera");
             RegisterScreenEvents();
             SetCamera();
         }
 
         private void OnDisable()
         {
-            //Debug.Log("disable camera");
             UnregisterScreenEvents();
         }
 
@@ -52,7 +56,6 @@ namespace BratyUI
         {
             _camera.orthographicSize = CalculateCameraSize();
             OnNodeCameraUpdate?.Invoke();
-            //Debug.LogError($"pixel width {_camera.pixelWidth} scaled pixel width {_camera.scaledPixelWidth}");
         }
         
         private float CalculateCameraSize()
