@@ -28,6 +28,12 @@ namespace BratyUI
         private static readonly Color AnchorSelectedColor = Color.green;
         private const float AnchorRadius = 0.3f;
 
+        private void OnValidate()
+        {
+            var rootNode = transform.GetComponentInParent<RootNode>();
+            rootNode.SetRootNode();
+        }
+
         private void OnDrawGizmos()
         {
             Gizmos.color = AnchorColor;

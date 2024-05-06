@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace BratyUI
 {
@@ -12,9 +13,12 @@ namespace BratyUI
         public float Aspect => _camera.aspect;
         public float Size => _camera.orthographicSize;
 
+        public event Action OnNodeCameraUpdate;
+
         private void OnValidate()
         {
             //Debug.Log("validate camera");
+            _camera = GetComponent<Camera>();
             SetCamera();
         }
 
@@ -33,6 +37,7 @@ namespace BratyUI
 
         private void RegisterScreenEvents()
         {
+            UnregisterScreenEvents();
             ScreenEventDispatcher.OnSafeAreaChange += SetCamera;
             ScreenEventDispatcher.OnResolutionChange += SetCamera;
         }
@@ -46,6 +51,7 @@ namespace BratyUI
         private void SetCamera()
         {
             _camera.orthographicSize = CalculateCameraSize();
+            OnNodeCameraUpdate?.Invoke();
             //Debug.LogError($"pixel width {_camera.pixelWidth} scaled pixel width {_camera.scaledPixelWidth}");
         }
         

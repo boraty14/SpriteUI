@@ -6,7 +6,7 @@ namespace BratyUI
     public class RootNode : MonoBehaviour
     {
         [SerializeField] private NodeCamera _nodeCamera;
-        private BoxCollider2D _collider;
+        [SerializeField] private BoxCollider2D _collider;
 
         public bool IsBlocking
         {
@@ -14,24 +14,29 @@ namespace BratyUI
             set => _collider.enabled = value;
         }
 
-        private void Start()
+        private void OnValidate()
         {
             SetRootNode();
         }
 
         private void OnEnable()
         {
-            RegisterScreenEvents();
+            SetRootNode();
+            RegisterCameraEvents();
         }
 
         private void OnDisable()
         {
-            UnregisterScreenEvents();
+            UnregisterCameraEvents();
         }
         
-        [ContextMenu("SetRootNode")]
-        private void SetRootNode()
+        public void SetRootNode()
         {
+            if (_nodeCamera == null)
+            {
+                return;
+            }
+            
             _collider = GetComponent<BoxCollider2D>();
             _collider.size = new Vector2(_nodeCamera.Size * _nodeCamera.Aspect * 2f, _nodeCamera.Size * 2f);
             
@@ -53,15 +58,24 @@ namespace BratyUI
             return new Vector3(xPosition, yPosition, 0f);
         }
         
-        private void RegisterScreenEvents()
+        private void RegisterCameraEvents()
         {
-            ScreenEventDispatcher.OnSafeAreaChange += SetRootNode;
-            ScreenEventDispatcher.OnResolutionChange += SetRootNode;
+            if (_nodeCamera == null)
+            {
+                return;
+            }
+            
+            UnregisterCameraEvents();
+            _nodeCamera.OnNodeCameraUpdate += SetRootNode;
         }
-        private void UnregisterScreenEvents()
+        private void UnregisterCameraEvents()
         {
-            ScreenEventDispatcher.OnSafeAreaChange -= SetRootNode;
-            ScreenEventDispatcher.OnResolutionChange -= SetRootNode;
+            if (_nodeCamera == null)
+            {
+                return;
+            }
+            
+            _nodeCamera.OnNodeCameraUpdate -= SetRootNode;
         }
 
     }
