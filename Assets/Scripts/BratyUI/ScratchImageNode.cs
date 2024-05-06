@@ -23,7 +23,6 @@ namespace BratyUI
             var rightTop = NodeCanvas.GetAnchorPosition(_maxAnchor);
 
             var size = (Vector2)(rightTop - leftBottom);
-            //size += _size;
             _spriteRenderer.drawMode = SpriteDrawMode.Sliced;
             _spriteRenderer.size = size + _sizeOffset;
 

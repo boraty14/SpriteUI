@@ -1,19 +1,9 @@
 ﻿- Add CUSTOM raycasting and their events, click, drag etc
 - Add SCROLL (pooling, dynamic generation, emitting event upward so it can scroll)
+- Add button
 
--SCRETCH???????????
-
-
-
-NEEDS
-
-- should be inuitive to use
-- should be performant
-- exact replica or just basic/ primary utility ?
-
-Pain points: stretching/sizing
-
-
-NOTES
-- Child logic for anchoring/parenting?
-- No child logic, enter yourself (generate for scroll pool)l
+Actions
+- click
+- down
+- drag
+- up

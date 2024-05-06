@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BratyUI
 {
@@ -58,7 +57,7 @@ namespace BratyUI
             var xPosition = -widthSize + (2 * widthSize * anchor.x);
             var yPosition = -heightSize + (2 * heightSize * anchor.y);
 
-            return new Vector3(xPosition, yPosition, 0f);
+            return new Vector3(xPosition, yPosition, 0.1f);
         }
         
         private void RegisterCameraEvents()
