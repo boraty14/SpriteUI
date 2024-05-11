@@ -6,6 +6,8 @@ namespace BratyUI
     [ExecuteAlways]
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Camera))]
+    [RequireComponent(typeof(NodeRaycaster))]
+
     public class NodeCamera : MonoBehaviour
     {
         [SerializeField] private Camera _camera;
@@ -16,6 +18,11 @@ namespace BratyUI
         public float Size => _camera.orthographicSize;
 
         public event Action OnNodeCameraUpdate;
+        
+        public Ray GetRayFromPosition(Vector2 mousePosition) => _camera.ScreenPointToRay(mousePosition);
+
+        public Vector3 ScreenToWorldPoint(Vector2 mousePosition) =>
+            _camera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, _camera.nearClipPlane));
 
         private void OnValidate()
         {
