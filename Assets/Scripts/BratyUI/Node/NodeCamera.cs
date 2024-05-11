@@ -1,12 +1,13 @@
 ﻿using System;
+using BratyUI.Element;
 using UnityEngine;
 
-namespace BratyUI
+namespace BratyUI.Node
 {
     [ExecuteAlways]
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Camera))]
-    [RequireComponent(typeof(NodeRaycaster))]
+    [RequireComponent(typeof(ElementRaycaster))]
 
     public class NodeCamera : MonoBehaviour
     {

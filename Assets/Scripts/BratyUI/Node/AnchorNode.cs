@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BratyUI
+namespace BratyUI.Node
 {
     [DisallowMultipleComponent]
     public class AnchorNode : NodeBase

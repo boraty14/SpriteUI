@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BratyUI
+namespace BratyUI.Node
 {
     [ExecuteAlways]
     [DisallowMultipleComponent]
