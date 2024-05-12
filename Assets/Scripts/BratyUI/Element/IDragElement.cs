@@ -4,6 +4,6 @@ namespace BratyUI.Element
 {
     public interface IDragElement
     {
-        void HandleDrag(Vector2 position);
+        void HandleDrag(Vector2 delta);
     }
 }

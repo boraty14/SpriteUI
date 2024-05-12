@@ -2,10 +2,16 @@
 - Add CUSTOM raycasting and their events, click, drag etc
 - Add SCROLL (pooling, dynamic generation, emitting event upward so it can scroll)
 - Add button
+- Add node manager
 
 NOTES
 - for drag, check parent
+- screen event dispatcher is parent, check childs and remove executealways
+- make scroll way basic and simpler
 
+TEMPLATE
+- scene loader
+- 
 
 BUGS
 - fix nodecamera/node raycaster
