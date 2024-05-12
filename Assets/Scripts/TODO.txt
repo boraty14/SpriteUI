@@ -1,6 +1,6 @@
 ﻿TODO
 - Add CUSTOM raycasting and their events, click, drag etc
-- Add SCROLL (pooling, dynamic generation, emitting event upward so it can scroll)
+- Add SCROLL
 - Add button
 - Add node manager
 
@@ -14,7 +14,7 @@ TEMPLATE
 - 
 
 BUGS
-- fix nodecamera/node raycaster
+
 
 Actions
 - click

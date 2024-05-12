@@ -18,6 +18,11 @@ namespace BratyUI.Node
             NodeCanvas = transform.GetComponentInParent<NodeCanvas>();
         }
 
+        protected virtual void OnDrawGizmosSelected()
+        {
+            DrawNode();
+        }
+
         protected void Update()
         {
             if (!IsDirty)

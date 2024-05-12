@@ -43,8 +43,12 @@ namespace BratyUI.Element
                 return;
             }
             
-            Debug.Log(Touchscreen.current);
             var position = Touchscreen.current.primaryTouch.position.ReadValue();
+            if (!CheckIfInputValid(position))
+            {
+                return;
+            }
+
             Vector2 worldPosition = _nodeCamera.ScreenToWorldPoint(position);
             
             // pointer down
@@ -112,6 +116,11 @@ namespace BratyUI.Element
             Ray ray = _nodeCamera.GetRayFromPosition(mousePosition);
             int hitCount = Physics2D.RaycastNonAlloc(ray.origin, ray.direction, _results, Mathf.Infinity, _layerMask);
             return hitCount;
+        }
+
+        private bool CheckIfInputValid(Vector2 mousePosition)
+        {
+            return !float.IsInfinity(mousePosition.x) && !float.IsInfinity(mousePosition.y);
         }
     }
 }

@@ -31,17 +31,20 @@ namespace BratyUI.Node
         {
             UnregisterCameraEvents();
         }
-        
+
         private void DrawNodes()
         {
             if (_nodeCamera == null)
             {
                 return;
             }
-            
+
             _collider = GetComponent<BoxCollider2D>();
-            _collider.size = new Vector2(_nodeCamera.Size * _nodeCamera.Aspect * 2f, _nodeCamera.Size * 2f);
-            
+            var leftBottom = GetAnchorPosition(Vector2.zero);
+            var rightTop = GetAnchorPosition(Vector2.one);
+            _collider.size = new Vector2(rightTop.x - leftBottom.x, rightTop.y - leftBottom.y);
+            _collider.offset = new Vector2((rightTop.x + leftBottom.x) * 0.5f, (rightTop.y + leftBottom.y) * 0.5f);
+
             var nodes = GetComponentsInChildren<NodeBase>(true);
             foreach (var node in nodes)
             {
@@ -54,29 +57,44 @@ namespace BratyUI.Node
             var heightSize = _nodeCamera.Size;
             var widthSize = _nodeCamera.Size * _nodeCamera.Aspect;
 
-            var xPosition = -widthSize + (2 * widthSize * anchor.x);
-            var yPosition = -heightSize + (2 * heightSize * anchor.y);
+            var widthStartOffset = _nodeCamera.SafeArea.x / _nodeCamera.ScreenWidth * widthSize * 2f;
+            var heightStartOffset = _nodeCamera.SafeArea.y / _nodeCamera.ScreenHeight * heightSize * 2f;
+            var xStartPosition = -widthSize + widthStartOffset;
+            var yStartPosition = -heightSize + heightStartOffset;
+
+            var widthEndOffset =
+                (_nodeCamera.ScreenWidth - _nodeCamera.SafeArea.x - _nodeCamera.SafeArea.width) /
+                 _nodeCamera.ScreenWidth * widthSize * 2f;
+            var heightEndOffset =
+                (_nodeCamera.ScreenHeight - _nodeCamera.SafeArea.y - _nodeCamera.SafeArea.height) /
+                _nodeCamera.ScreenHeight * heightSize * 2f;
+            var xEndPosition = widthSize - widthEndOffset;
+            var yEndPosition = heightSize - heightEndOffset;
+            
+            var xPosition = xStartPosition + (xEndPosition - xStartPosition) * anchor.x;
+            var yPosition = yStartPosition + (yEndPosition - yStartPosition) * anchor.y;
 
             return new Vector3(xPosition, yPosition, 0.1f);
         }
-        
+
         private void RegisterCameraEvents()
         {
             if (_nodeCamera == null)
             {
                 return;
             }
-            
+
             UnregisterCameraEvents();
             _nodeCamera.OnNodeCameraUpdate += DrawNodes;
         }
+
         private void UnregisterCameraEvents()
         {
             if (_nodeCamera == null)
             {
                 return;
             }
-            
+
             _nodeCamera.OnNodeCameraUpdate -= DrawNodes;
         }
     }
