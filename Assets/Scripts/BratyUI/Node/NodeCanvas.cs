@@ -74,7 +74,7 @@ namespace BratyUI.Node
             var xPosition = xStartPosition + (xEndPosition - xStartPosition) * anchor.x;
             var yPosition = yStartPosition + (yEndPosition - yStartPosition) * anchor.y;
 
-            return new Vector3(xPosition, yPosition, 0.1f);
+            return new Vector3(xPosition, yPosition, -0.1f);
         }
 
         private void RegisterCameraEvents()

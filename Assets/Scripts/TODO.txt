@@ -1,11 +1,8 @@
 ﻿TODO
-- Add CUSTOM raycasting and their events, click, drag etc
 - Add SCROLL
-- Add button
 - Add node manager
 
 NOTES
-- for drag, check parent
 - make scroll way basic and simpler
 
 TEMPLATE
@@ -13,13 +10,6 @@ TEMPLATE
 - 
 
 BUGS
-
-
-Actions
-- click
-- down
-- drag
-- up
 
 Components (Later)
 - tooltip

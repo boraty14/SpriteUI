@@ -61,7 +61,6 @@ namespace BratyUI.Element
                 {
                     return;
                 }
-                
                 Result.collider.transform.GetComponents<IPointerDownElement>(_pointerDownElements);
                 Result.collider.transform.GetComponents<IClickElement>(_clickElements);
                 Result.collider.transform.GetComponentsInParent<IDragElement>(true,_dragElements);
@@ -130,11 +129,6 @@ namespace BratyUI.Element
             // drag
             if (Touchscreen.current.primaryTouch.press.isPressed)
             {
-                if (_dragElements.Count == 0)
-                {
-                    return;
-                }
-                
                 var touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
                 if (!CheckIfInputValid(touchPosition))
                 {
@@ -153,6 +147,10 @@ namespace BratyUI.Element
                     foreach (var dragElement in _dragElements)
                     {
                         dragElement.HandleBeginDrag(deltaPosition);
+                    }
+                    foreach (var clickElement in _clickElements)
+                    {
+                        clickElement.HandleClickCancel();
                     }
                     _isDragging = true;
                     _lastPosition = _pressPosition;

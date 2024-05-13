@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace BratyUI.Element
 {
+    [DisallowMultipleComponent]
     [RequireComponent(typeof(BoxCollider2D))]
     public abstract class ScrollElement : MonoBehaviour, IDragElement
     {
