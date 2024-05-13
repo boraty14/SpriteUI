@@ -9,6 +9,7 @@ namespace BratyUI.Node
     {
         [SerializeField] private NodeCamera _nodeCamera;
         [SerializeField] private BoxCollider2D _collider;
+        [SerializeField] private float _localZOffset = -0.1f;
 
         public bool IsBlocking
         {
@@ -54,9 +55,14 @@ namespace BratyUI.Node
 
         public Vector3 GetAnchorPosition(Vector2 anchor)
         {
+            if (!_nodeCamera.IsInitialized)
+            {
+                return anchor;
+            }
+            
             var heightSize = _nodeCamera.Size;
             var widthSize = _nodeCamera.Size * _nodeCamera.Aspect;
-
+            
             var widthStartOffset = _nodeCamera.SafeArea.x / _nodeCamera.ScreenWidth * widthSize * 2f;
             var heightStartOffset = _nodeCamera.SafeArea.y / _nodeCamera.ScreenHeight * heightSize * 2f;
             var xStartPosition = -widthSize + widthStartOffset;
@@ -74,7 +80,7 @@ namespace BratyUI.Node
             var xPosition = xStartPosition + (xEndPosition - xStartPosition) * anchor.x;
             var yPosition = yStartPosition + (yEndPosition - yStartPosition) * anchor.y;
 
-            return new Vector3(xPosition, yPosition, -0.1f);
+            return new Vector3(xPosition, yPosition, _localZOffset);
         }
 
         private void RegisterCameraEvents()

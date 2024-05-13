@@ -36,9 +36,9 @@ namespace BratyUI.Node
 
         protected override void OnDrawGizmosSelected()
         {
+            base.OnDrawGizmosSelected();
             Gizmos.color = AnchorSelectedColor;
             Gizmos.DrawWireSphere(transform.position, AnchorRadius);
-            SetTransform();
         }
 #endif
         
