@@ -4,7 +4,7 @@ using UnityEngine;
 namespace BratyUI.Element
 {
     [RequireComponent(typeof(BoxCollider2D))]
-    public abstract class ScrollElement : MonoBehaviour, IDragElement,IBeginDragElement,IEndDragElement
+    public abstract class ScrollElement : MonoBehaviour, IDragElement
     {
         [SerializeField] private ScrollSettings _settings;
         [SerializeField] private BoxCollider2D _boxCollider2D;

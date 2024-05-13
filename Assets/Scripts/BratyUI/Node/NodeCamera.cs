@@ -66,7 +66,6 @@ namespace BratyUI.Node
 
         private void SetCamera()
         {
-            Debug.Log(Screen.safeArea);
             SafeArea = Screen.safeArea;
             ScreenWidth = Screen.width;
             ScreenHeight = Screen.height;

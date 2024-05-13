@@ -6,7 +6,6 @@
 
 NOTES
 - for drag, check parent
-- screen event dispatcher is parent, check childs and remove executealways
 - make scroll way basic and simpler
 
 TEMPLATE

@@ -2,6 +2,9 @@
 {
     public interface IClickElement
     {
-        void HandleClick();
+        void HandleClickStart();
+        void HandleClickCancel();
+
+        void HandleClickComplete();
     }
 }

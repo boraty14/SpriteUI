@@ -9,14 +9,17 @@ namespace BratyUI.Element
     [RequireComponent(typeof(NodeCamera))]
     public class ElementRaycaster : MonoBehaviour
     {
-        [Header("UI Event Settings")] 
+        [Header("UI Event Settings")]
+        [SerializeField] private float _dragThreshold;
 
         [Header("Default Settings")] 
         [SerializeField] private LayerMask _layerMask;
         [SerializeField] private NodeCamera _nodeCamera;
         
         private readonly RaycastHit2D[] _results = new RaycastHit2D[1];
+        private Vector2 _pressPosition;
         private Vector2 _lastPosition;
+        private bool _isDragging;
         private RaycastHit2D Result => _results[0];
 
         private readonly List<IPointerDownElement> _pointerDownElements = new List<IPointerDownElement>();
@@ -43,27 +46,35 @@ namespace BratyUI.Element
                 return;
             }
             
-            var position = Touchscreen.current.primaryTouch.position.ReadValue();
-            if (!CheckIfInputValid(position))
-            {
-                return;
-            }
-
-            Vector2 worldPosition = _nodeCamera.ScreenToWorldPoint(position);
-            
             // pointer down
             if (Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
             {
-                if (FireRayAndGetHitCount() == 0)
+                var touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+                if (!CheckIfInputValid(touchPosition))
                 {
                     return;
                 }
-
+                
+                _pressPosition = _nodeCamera.ScreenToWorldPoint(touchPosition);
+                
+                if (FireRayAndGetHitCount(touchPosition) == 0)
+                {
+                    return;
+                }
+                
                 Result.collider.transform.GetComponents<IPointerDownElement>(_pointerDownElements);
-                Result.collider.transform.GetComponents<IDragElement>(_dragElements);
+                Result.collider.transform.GetComponents<IClickElement>(_clickElements);
+                Result.collider.transform.GetComponentsInParent<IDragElement>(true,_dragElements);
+                
                 foreach (var pointerDownElement in _pointerDownElements)
                 {
-                    pointerDownElement.HandlePointerDown(worldPosition);
+                    pointerDownElement.HandlePointerDown(_pressPosition);
+                }
+                _pointerDownElements.Clear();
+                
+                foreach (var clickElement in _clickElements)
+                {
+                    clickElement.HandleClickStart();
                 }
                 return;
             }
@@ -71,8 +82,37 @@ namespace BratyUI.Element
             // pointer up
             if (Touchscreen.current.primaryTouch.press.wasReleasedThisFrame)
             {
+                var touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+                if (!CheckIfInputValid(touchPosition))
+                {
+                    return;
+                }
+                
+                Vector2 releasePosition = _nodeCamera.ScreenToWorldPoint(touchPosition);
+                
+                // end drag
+                if (_isDragging)
+                {
+                    foreach (var dragElement in _dragElements)
+                    {
+                        dragElement.HandleEndDrag(releasePosition);
+                    }
+                }
+                // end click
+                else
+                {
+                    foreach (var clickElement in _clickElements)
+                    {
+                        clickElement.HandleClickComplete();
+                    }
+                }
+
+                _isDragging = false;
                 _dragElements.Clear();
-                if (FireRayAndGetHitCount() == 0)
+                _clickElements.Clear();
+                
+                
+                if (FireRayAndGetHitCount(touchPosition) == 0)
                 {
                     return;
                 }
@@ -80,17 +120,10 @@ namespace BratyUI.Element
                 Result.collider.transform.GetComponents<IPointerUpElement>(_pointerUpElements);
                 foreach (var pointerUpElement in _pointerUpElements)
                 {
-                    pointerUpElement.HandlePointerUp(worldPosition);
+                    pointerUpElement.HandlePointerUp(releasePosition);
                 }
-                
-                // click
-                
-                Result.collider.transform.GetComponents<IClickElement>(_clickElements);
-                foreach (var clickElement in _clickElements)
-                {
-                    clickElement.HandleClick();
-                }
-                
+                _pointerUpElements.Clear();
+
                 return;
             }
 
@@ -102,18 +135,42 @@ namespace BratyUI.Element
                     return;
                 }
                 
-                var delta = worldPosition - _lastPosition;
+                var touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+                if (!CheckIfInputValid(touchPosition))
+                {
+                    return;
+                }
+                
+                Vector2 deltaPosition = _nodeCamera.ScreenToWorldPoint(touchPosition);
+
+                if (!_isDragging)
+                {
+                    if (Vector2.Distance(deltaPosition, _pressPosition) < _dragThreshold)
+                    {
+                        return;
+                    }
+                    
+                    foreach (var dragElement in _dragElements)
+                    {
+                        dragElement.HandleBeginDrag(deltaPosition);
+                    }
+                    _isDragging = true;
+                    _lastPosition = _pressPosition;
+                }
+                
+                var delta = deltaPosition - _lastPosition;
                 foreach (var dragElement in _dragElements)
                 {
                     dragElement.HandleDrag(delta);
                 }
+
+                _lastPosition = deltaPosition;
             }
         }
 
-        private int FireRayAndGetHitCount()
+        private int FireRayAndGetHitCount(Vector2 touchPosition)
         {
-            Vector2 mousePosition = Touchscreen.current.primaryTouch.position.ReadValue();
-            Ray ray = _nodeCamera.GetRayFromPosition(mousePosition);
+            Ray ray = _nodeCamera.GetRayFromPosition(touchPosition);
             int hitCount = Physics2D.RaycastNonAlloc(ray.origin, ray.direction, _results, Mathf.Infinity, _layerMask);
             return hitCount;
         }

@@ -23,7 +23,16 @@ namespace BratyUI.Element
             _collider = GetComponent<Collider2D>();
         }
 
-        public void HandleClick()
+        public void HandleClickStart()
+        {
+            
+        }
+
+        public void HandleClickCancel()
+        {
+        }
+
+        public void HandleClickComplete()
         {
             OnButtonClick?.Invoke();
             Debug.Log(213);
