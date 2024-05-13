@@ -6,12 +6,19 @@ namespace BratyUI
     [ExecuteAlways]
     public class ScreenEventDispatcher : MonoBehaviour
     {
-        private Rect _safeArea = new Rect();
+        private Rect _safeArea;
         private int _height;
         private int _width;
         
         public static event Action OnSafeAreaChange; 
-        public static event Action OnResolutionChange; 
+        public static event Action OnResolutionChange;
+
+        private void OnEnable()
+        {
+            _width = 0;
+            _height = 0;
+            _safeArea = new Rect();
+        }
 
         private void Update()
         {

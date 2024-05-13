@@ -21,7 +21,7 @@ namespace BratyUI.Node
         
         public float Aspect => _camera.aspect;
         public float Size => _camera.orthographicSize;
-        public bool IsInitialized => ScreenWidth != 0;
+        public bool IsInitialized => SafeArea.width != 0;
 
         public event Action OnNodeCameraUpdate;
         

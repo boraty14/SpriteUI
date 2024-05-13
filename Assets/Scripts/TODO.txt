@@ -1,6 +1,6 @@
 ﻿TODO
 - Add SCROLL
-- Add node manager
+- Add node manager -> set nodecamera of nodecanvas at init
 
 NOTES
 - make scroll way basic and simpler

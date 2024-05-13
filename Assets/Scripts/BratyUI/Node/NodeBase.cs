@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace BratyUI.Node
 {
     [ExecuteAlways]
@@ -8,30 +12,36 @@ namespace BratyUI.Node
     public abstract class NodeBase : MonoBehaviour
     {
         [SerializeField] protected NodeCanvas NodeCanvas;
-        public bool IsDirty { get; protected set; }
+        private bool _isDirty;
+        protected bool IsSelected { get; private set; }
 
-        public void SetDirty() => IsDirty = true;
+        public void SetDirty() => _isDirty = true;
 
         private void OnValidate()
         {
-            IsDirty = true;
+            _isDirty = true;
             NodeCanvas = transform.GetComponentInParent<NodeCanvas>();
         }
 
         protected virtual void OnDrawGizmosSelected()
         {
+            IsSelected = Selection.activeGameObject == this.gameObject;
+            if (!IsSelected)
+            {
+                return;
+            }
             DrawNode();
         }
 
         protected void Update()
         {
-            if (!IsDirty)
+            if (!_isDirty)
             {
                 return;
             }
             
             DrawNode();
-            IsDirty = false;
+            _isDirty = false;
         }
 
         protected abstract void DrawNode();
