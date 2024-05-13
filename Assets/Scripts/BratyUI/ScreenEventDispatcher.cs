@@ -4,41 +4,42 @@ using UnityEngine;
 namespace BratyUI
 {
     [ExecuteAlways]
+    [DefaultExecutionOrder(-10)]
     public class ScreenEventDispatcher : MonoBehaviour
     {
-        private Rect _safeArea;
-        private int _height;
-        private int _width;
-        
-        public static event Action OnSafeAreaChange; 
-        public static event Action OnResolutionChange;
+        private Resolution _resolution;
+        public static event Action<Resolution> OnResolutionChange;
 
         private void OnEnable()
         {
-            _width = 0;
-            _height = 0;
-            _safeArea = new Rect();
+            _resolution = new Resolution();
         }
 
         private void Update()
         {
+            bool isResolutionChanged = false;
             var width = Screen.width;
             var height = Screen.height;
-            if (width != _width || height != _height)
+            if (width != _resolution.Width || height != _resolution.Height)
             {
-                _width = width;
-                _height = height;
-                OnResolutionChange?.Invoke();
+                _resolution.Width = width;
+                _resolution.Height = height;
+                isResolutionChanged = true;
             }
             
             var safeArea = Screen.safeArea;
-            if (!Mathf.Approximately(_safeArea.x, safeArea.x) ||
-                !Mathf.Approximately(_safeArea.y, safeArea.y) ||
-                !Mathf.Approximately(_safeArea.width, safeArea.width) ||
-                !Mathf.Approximately(_safeArea.height, safeArea.height))
+            if (!Mathf.Approximately(_resolution.SafeArea.x, safeArea.x) ||
+                !Mathf.Approximately(_resolution.SafeArea.y, safeArea.y) ||
+                !Mathf.Approximately(_resolution.SafeArea.width, safeArea.width) ||
+                !Mathf.Approximately(_resolution.SafeArea.height, safeArea.height))
             {
-                _safeArea = safeArea;
-                OnSafeAreaChange?.Invoke();
+                _resolution.SafeArea = safeArea;
+                isResolutionChanged = true;
+            }
+
+            if (isResolutionChanged)
+            {
+                OnResolutionChange?.Invoke(_resolution);
             }
         }
     }

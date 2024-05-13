@@ -14,10 +14,12 @@ namespace BratyUI.Node
         [SerializeField] private Camera _camera;
         [SerializeField] private float _cameraSize;
         [Range(0f, 1f)] [SerializeField] private float _horizontalWeight;
-        
-        public Rect SafeArea { get; private set; }
-        public int ScreenWidth { get; private set; }
-        public int ScreenHeight { get; private set; }
+
+        private Resolution _resolution;
+
+        public Rect SafeArea => _resolution.SafeArea;
+        public int ScreenWidth => _resolution.Width;
+        public int ScreenHeight => _resolution.Height;
         
         public float Aspect => _camera.aspect;
         public float Size => _camera.orthographicSize;
@@ -55,22 +57,23 @@ namespace BratyUI.Node
         private void RegisterScreenEvents()
         {
             UnregisterScreenEvents();
-            ScreenEventDispatcher.OnSafeAreaChange += SetCamera;
-            ScreenEventDispatcher.OnResolutionChange += SetCamera;
+            ScreenEventDispatcher.OnResolutionChange += OnResolutionChange;
         }
         
         private void UnregisterScreenEvents()
         {
-            ScreenEventDispatcher.OnSafeAreaChange -= SetCamera;
-            ScreenEventDispatcher.OnResolutionChange -= SetCamera;
+            ScreenEventDispatcher.OnResolutionChange -= OnResolutionChange;
+        }
+
+        private void OnResolutionChange(Resolution resolution)
+        {
+            _resolution = resolution;
+            _camera.orthographicSize = CalculateCameraSize();
+            OnNodeCameraUpdate?.Invoke();
         }
 
         private void SetCamera()
         {
-            SafeArea = Screen.safeArea;
-            ScreenWidth = Screen.width;
-            ScreenHeight = Screen.height;
-            
             _camera.orthographicSize = CalculateCameraSize();
             OnNodeCameraUpdate?.Invoke();
         }
