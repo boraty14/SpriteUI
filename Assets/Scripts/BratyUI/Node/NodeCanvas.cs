@@ -55,11 +55,6 @@ namespace BratyUI.Node
 
         public Vector3 GetAnchorPosition(Vector2 anchor)
         {
-            if (!_nodeCamera.IsInitialized)
-            {
-                return anchor;
-            }
-            
             var heightSize = _nodeCamera.Size;
             var widthSize = _nodeCamera.Size * _nodeCamera.Aspect;
             
@@ -79,6 +74,9 @@ namespace BratyUI.Node
             
             var xPosition = xStartPosition + (xEndPosition - xStartPosition) * anchor.x;
             var yPosition = yStartPosition + (yEndPosition - yStartPosition) * anchor.y;
+
+            xPosition = float.IsNaN(xPosition) ? 0f : xPosition;
+            yPosition = float.IsNaN(yPosition) ? 0f : yPosition;
 
             return new Vector3(xPosition, yPosition, _localZOffset);
         }
