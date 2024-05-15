@@ -11,8 +11,14 @@ namespace BratyUI.Element
         
         public bool IsBlocking
         {
-            get => _collider.enabled;
-            set => _collider.enabled = value;
+            get => _collider != null && _collider.enabled;
+            set
+            {
+                if (_collider != null)
+                {
+                    _collider.enabled = value;
+                }
+            }
         }
         
         private void OnValidate()

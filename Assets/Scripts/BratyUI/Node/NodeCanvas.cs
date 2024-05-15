@@ -77,6 +77,8 @@ namespace BratyUI.Node
 
             xPosition = float.IsNaN(xPosition) ? 0f : xPosition;
             yPosition = float.IsNaN(yPosition) ? 0f : yPosition;
+            
+            //Debug.Log($"[{name}]::width:{_nodeCamera.ScreenWidth} height: {_nodeCamera.ScreenHeight} safeArea {_nodeCamera.SafeArea}");
 
             return new Vector3(xPosition, yPosition, _localZOffset);
         }

@@ -8,7 +8,6 @@ namespace BratyUI.Node
 {
     [ExecuteAlways]
     [DisallowMultipleComponent]
-
     public abstract class NodeBase : MonoBehaviour
     {
         [SerializeField] protected NodeCanvas NodeCanvas;
@@ -25,11 +24,14 @@ namespace BratyUI.Node
 
         protected virtual void OnDrawGizmosSelected()
         {
+#if UNITY_EDITOR
             IsSelected = Selection.activeGameObject == this.gameObject;
+#endif
             if (!IsSelected)
             {
                 return;
             }
+
             DrawNode();
         }
 
@@ -39,7 +41,7 @@ namespace BratyUI.Node
             {
                 return;
             }
-            
+
             DrawNode();
             _isDirty = false;
         }

@@ -1,18 +1,27 @@
 ﻿using System;
+using BratyUI.Element.Gesture;
 using UnityEngine;
 
 namespace BratyUI.Element
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BoxCollider2D))]
-    public abstract class ScrollElement : MonoBehaviour, IDragElement
+    public abstract class ScrollElementBase<TScrollItemElement> : MonoBehaviour, IDragElement
+        where TScrollItemElement : ScrollItemElementBase
     {
+        [SerializeField] private TScrollItemElement _scrollItemElement;
         [SerializeField] private ScrollSettings _settings;
-        [SerializeField] private BoxCollider2D _boxCollider2D;
+        [SerializeField] private BoxCollider2D _collider;
+
+        public bool IsScrollEnabled
+        {
+            get => _collider.enabled;
+            set => _collider.enabled = value;
+        }
 
         private void OnValidate()
         {
-            _boxCollider2D = GetComponent<BoxCollider2D>();
+            _collider = GetComponent<BoxCollider2D>();
         }
 
 
@@ -33,14 +42,12 @@ namespace BratyUI.Element
     public class ScrollSettings
     {
         [Header("Margin")]
-        public float TopMargin;
-        public float BottomMargin;
-        public float LeftMargin;
-        public float RightMargin;
+        public float StartMargin;
+        public float EndMargin;
 
         [Header("Scroll")]
-        public bool IsHorizontal;
         public float Speed = 1f;
         public float Inertia = 0.15f;
+        public float Space = 0f;
     }
 }

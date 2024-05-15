@@ -1,4 +1,4 @@
-﻿namespace BratyUI.Element
+﻿namespace BratyUI.Element.Gesture
 {
     public interface IClickElement
     {
