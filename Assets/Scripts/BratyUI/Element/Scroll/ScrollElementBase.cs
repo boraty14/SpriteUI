@@ -17,8 +17,9 @@ namespace BratyUI.Element.Scroll
         [SerializeField] protected Transform View;
 
         private readonly List<TScrollItemModel> _models = new();
-
         private float _scrollPercentage;
+
+        private float ScrollSize => _collider.size.y;
 
         public bool IsScrollEnabled
         {
@@ -39,6 +40,7 @@ namespace BratyUI.Element.Scroll
 
         protected virtual void InitializeScrollElement()
         {
+            
         }
 
         public void ScrollToIndex(int index)
