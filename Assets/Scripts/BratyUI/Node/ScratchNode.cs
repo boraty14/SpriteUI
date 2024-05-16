@@ -6,7 +6,7 @@ namespace BratyUI.Node
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(BoxCollider2D))]
 
-    public class ScratchImageNode : NodeBase
+    public class ScratchNode : NodeBase
     {
         [SerializeField] private Vector2 _position;
         [SerializeField] private Vector2 _sizeOffset;
