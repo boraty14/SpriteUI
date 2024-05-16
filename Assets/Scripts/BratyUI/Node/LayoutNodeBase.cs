@@ -10,9 +10,9 @@ namespace BratyUI.Node
         [SerializeField] private Vector2 _minAnchor = Vector2.zero;
         [SerializeField] private Vector2 _maxAnchor = Vector2.one;
         [SerializeField] protected Vector2 Size;
-        
+
         protected abstract void SetChildLayouts();
-        
+
         protected override void DrawNode()
         {
             var leftBottom = NodeCanvas.GetAnchorPosition(_minAnchor);
@@ -25,30 +25,26 @@ namespace BratyUI.Node
             transform.localScale = Vector3.one;
 
             Size = size + _sizeOffset;
-            
+
             SetChildLayouts();
         }
 
-        protected override void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+        protected override void DrawSelectedGizmos()
         {
-            base.OnDrawGizmosSelected();
-            if (!IsSelected)
-            {
-                return;
-            }
-
             var localPosition = transform.localPosition;
-            
+
             Vector3 topLeft = new Vector3(localPosition.x - Size.x / 2, localPosition.y + Size.y / 2, 0);
             Vector3 topRight = new Vector3(localPosition.x + Size.x / 2, localPosition.y + Size.y / 2, 0);
             Vector3 bottomRight = new Vector3(localPosition.x + Size.x / 2, localPosition.y - Size.y / 2, 0);
             Vector3 bottomLeft = new Vector3(localPosition.x - Size.x / 2, localPosition.y - Size.y / 2, 0);
-            
+
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(topLeft, topRight);
             Gizmos.DrawLine(topRight, bottomRight);
             Gizmos.DrawLine(bottomRight, bottomLeft);
             Gizmos.DrawLine(bottomLeft, topLeft);
         }
+#endif
     }
 }

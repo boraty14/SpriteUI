@@ -12,28 +12,8 @@ namespace BratyUI.Node
     {
         [SerializeField] protected NodeCanvas NodeCanvas;
         private bool _isDirty;
-        protected bool IsSelected { get; private set; }
 
         public void SetDirty() => _isDirty = true;
-
-        private void OnValidate()
-        {
-            _isDirty = true;
-            NodeCanvas = transform.GetComponentInParent<NodeCanvas>();
-        }
-
-        protected virtual void OnDrawGizmosSelected()
-        {
-#if UNITY_EDITOR
-            IsSelected = Selection.activeGameObject == this.gameObject;
-#endif
-            if (!IsSelected)
-            {
-                return;
-            }
-
-            DrawNode();
-        }
 
         protected void Update()
         {
@@ -47,5 +27,31 @@ namespace BratyUI.Node
         }
 
         protected abstract void DrawNode();
+        
+#if UNITY_EDITOR
+
+        private void OnDrawGizmosSelected()
+        {
+            var isSelectedInEditor = Selection.activeGameObject == this.gameObject;
+            if (!isSelectedInEditor)
+            {
+                return;
+            }
+            
+            DrawNode();
+            DrawSelectedGizmos();
+        }
+
+        protected virtual void DrawSelectedGizmos()
+        {
+            
+        }
+        
+        private void OnValidate()
+        {
+            _isDirty = true;
+            NodeCanvas = transform.GetComponentInParent<NodeCanvas>();
+        }
+#endif
     }
 }

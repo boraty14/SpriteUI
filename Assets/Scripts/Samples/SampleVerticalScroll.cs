@@ -1,15 +1,8 @@
-using UnityEngine;
+using BratyUI.Element;
 
-public class SampleVerticalScroll : MonoBehaviour
+namespace Samples
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
+    public class SampleVerticalScroll : VerticalScrollElement<SampleScrollItem>
     {
         
     }

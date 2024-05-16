@@ -11,7 +11,10 @@ TEMPLATE
 
 BUGS
 
-Components (Later)
+COMPONENTS (Later)
 - tooltip
 - slider
 - dropdown
+
+SHOWCASE
+- 5 page

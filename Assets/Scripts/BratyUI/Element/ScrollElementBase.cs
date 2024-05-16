@@ -12,6 +12,7 @@ namespace BratyUI.Element
         [SerializeField] private TScrollItemElement _scrollItemElement;
         [SerializeField] private ScrollSettings _settings;
         [SerializeField] private BoxCollider2D _collider;
+        [SerializeField] protected Transform View;
 
         public bool IsScrollEnabled
         {
@@ -24,9 +25,11 @@ namespace BratyUI.Element
             _collider = GetComponent<BoxCollider2D>();
         }
 
+        protected abstract void ScrollView(Vector2 delta);
 
         public void HandleDrag(Vector2 delta)
         {
+            ScrollView(delta);
         }
 
         public void HandleBeginDrag(Vector2 point)
