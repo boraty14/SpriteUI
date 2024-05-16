@@ -10,7 +10,7 @@ namespace BratyUI.Element.Scroll
     {
         public override void HandleDrag(Vector2 delta)
         {
-            View.localPosition += Vector3.up * delta.y;
+            //View.localPosition += Vector3.up * delta.y;
         }
 
         public override void HandleBeginDrag(Vector2 point)

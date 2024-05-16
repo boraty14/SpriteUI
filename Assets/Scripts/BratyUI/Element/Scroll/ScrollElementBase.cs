@@ -14,7 +14,6 @@ namespace BratyUI.Element.Scroll
         [SerializeField] private TScrollItemElement _scrollItemElement;
         [SerializeField] private ScrollSettings _settings;
         [SerializeField] private BoxCollider2D _collider;
-        [SerializeField] protected Transform View;
 
         private readonly List<TScrollItemModel> _models = new();
         private float _scrollPercentage;
