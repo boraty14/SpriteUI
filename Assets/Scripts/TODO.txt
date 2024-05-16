@@ -4,6 +4,7 @@
 
 NOTES
 - make scroll way basic and simpler
+- move each element not parent
 
 TEMPLATE
 - scene loader
