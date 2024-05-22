@@ -39,6 +39,7 @@ namespace BratyUI
 
             if (isResolutionChanged)
             {
+                Debug.LogError(_resolution);
                 OnResolutionChange?.Invoke(_resolution);
             }
         }

@@ -13,8 +13,6 @@ namespace BratyUI.Node
     {
         [SerializeField] private Camera _camera;
         [SerializeField] private float _cameraSize;
-        [Range(0f, 1f)] [SerializeField] private float _horizontalWeight;
-
         private Resolution _resolution;
 
         public Rect SafeArea => _resolution.SafeArea;
@@ -39,7 +37,7 @@ namespace BratyUI.Node
 
         private void OnDrawGizmosSelected()
         {
-            _camera.orthographicSize = CalculateCameraSize();
+            _camera.orthographicSize = _cameraSize;
         }
 
         private void OnEnable()
@@ -67,21 +65,14 @@ namespace BratyUI.Node
         private void OnResolutionChange(Resolution resolution)
         {
             _resolution = resolution;
-            _camera.orthographicSize = CalculateCameraSize();
+            _camera.orthographicSize = _cameraSize;
             OnNodeCameraUpdate?.Invoke();
         }
 
         private void SetCamera()
         {
-            _camera.orthographicSize = CalculateCameraSize();
+            _camera.orthographicSize = _cameraSize;
             OnNodeCameraUpdate?.Invoke();
-        }
-        
-        private float CalculateCameraSize()
-        {
-            float horizontalSize = (1f / _camera.aspect) * _cameraSize;
-            float cameraSize = Mathf.Lerp(_cameraSize, horizontalSize, _horizontalWeight);
-            return cameraSize;
         }
     }
 }
