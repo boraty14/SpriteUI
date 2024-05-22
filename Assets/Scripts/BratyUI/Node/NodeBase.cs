@@ -50,7 +50,7 @@ namespace BratyUI.Node
         private void OnValidate()
         {
             _isDirty = true;
-            NodeCanvas = transform.GetComponentInParent<NodeCanvas>();
+            NodeCanvas = transform.GetComponentInParent<NodeCanvas>(true);
         }
 #endif
     }
