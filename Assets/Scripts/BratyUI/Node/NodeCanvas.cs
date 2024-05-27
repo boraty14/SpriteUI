@@ -46,10 +46,12 @@ namespace BratyUI.Node
             _collider.size = new Vector2(rightTop.x - leftBottom.x, rightTop.y - leftBottom.y);
             _collider.offset = new Vector2((rightTop.x + leftBottom.x) * 0.5f, (rightTop.y + leftBottom.y) * 0.5f);
 
-            var nodes = GetComponentsInChildren<NodeBase>(true);
-            foreach (var node in nodes)
+            foreach (Transform child in transform)
             {
-                node.SetDirty();
+                if (child.TryGetComponent(out NodeBase childNode))
+                {
+                    childNode.DrawNode();
+                }
             }
         }
 
@@ -78,8 +80,6 @@ namespace BratyUI.Node
             xPosition = float.IsNaN(xPosition) ? 0f : xPosition;
             yPosition = float.IsNaN(yPosition) ? 0f : yPosition;
             
-            //Debug.Log($"[{name}]::width:{_nodeCamera.ScreenWidth} height: {_nodeCamera.ScreenHeight} safeArea {_nodeCamera.SafeArea}");
-
             return new Vector3(xPosition, yPosition, _localZOffset);
         }
 

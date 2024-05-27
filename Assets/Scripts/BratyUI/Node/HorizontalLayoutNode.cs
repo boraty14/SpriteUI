@@ -12,7 +12,7 @@ namespace BratyUI.Node
                 return;
             }
 
-            float horizontalSize = Size.x;
+            float horizontalSize = TotalSize.x;
             float sizeFactor = horizontalSize / (childCount + 1);
             float startPosition = -horizontalSize * 0.5f;
 

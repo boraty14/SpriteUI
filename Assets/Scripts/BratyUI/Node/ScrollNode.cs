@@ -1,32 +1,37 @@
-﻿using BratyUI.Element.Gesture;
-using BratyUI.Node;
+﻿using System;
+using BratyUI.Element.Gesture;
 using UnityEngine;
 
-namespace BratyUI.Element
+namespace BratyUI.Node
 {
-    [DisallowMultipleComponent]
     [RequireComponent(typeof(BoxCollider2D))]
-    public class ScrollElement : MonoBehaviour, IDragElement
+    public class ScrollNode : NodeBase, IDragElement
     {
         [SerializeField] private ScrollSettings _scrollSettings;
         [SerializeField] private BoxCollider2D _boxCollider;
         [SerializeField] private Transform _view;
-        
+
         private Vector2 _velocity = Vector2.zero;
-        
+
         public bool IsScrollEnabled
         {
             get => _boxCollider.enabled;
             set => _boxCollider.enabled = value;
         }
-        
+
         public bool IsDragging { get; private set; }
+
+        protected override void DrawCurrentNode()
+        {
+            base.DrawCurrentNode();
+            _boxCollider.size = TotalSize;
+        }
 
         private void OnEnable()
         {
             IsDragging = false;
         }
-        
+
         private void OnDisable()
         {
             IsDragging = false;
@@ -38,7 +43,7 @@ namespace BratyUI.Element
             {
                 return;
             }
-            
+
             if (_velocity.sqrMagnitude > 0.01f)
             {
                 MoveView(_velocity * Time.deltaTime);
@@ -48,8 +53,12 @@ namespace BratyUI.Element
             {
                 _velocity = Vector2.zero;
             }
-            
-            
+
+            if (_view == null)
+            {
+                return;
+            }
+
             Vector3 position = _view.localPosition;
             Vector3 targetPosition = position;
             bool isElastic = false;
@@ -80,7 +89,7 @@ namespace BratyUI.Element
             {
                 return;
             }
-            
+
             Vector3 displacement = targetPosition - position;
             if (displacement.sqrMagnitude > 0.01f)
             {
@@ -93,6 +102,11 @@ namespace BratyUI.Element
 
         private void MoveView(Vector2 delta)
         {
+            if (_view == null)
+            {
+                return;
+            }
+
             if (_scrollSettings.IsVertical)
             {
                 _view.localPosition += Vector3.up * delta.y;
@@ -102,13 +116,15 @@ namespace BratyUI.Element
             {
                 _view.localPosition += Vector3.right * delta.x;
             }
-            
-            float horizontalPoint = Mathf.Clamp(_view.localPosition.x, _scrollSettings.MinScrollPoint.x - _scrollSettings.ScrollOffset.x,
+
+            float horizontalPoint = Mathf.Clamp(_view.localPosition.x,
+                _scrollSettings.MinScrollPoint.x - _scrollSettings.ScrollOffset.x,
                 _scrollSettings.MaxScrollPoint.x + _scrollSettings.ScrollOffset.x);
-            
-            float verticalPoint = Mathf.Clamp(_view.localPosition.y, _scrollSettings.MinScrollPoint.y - _scrollSettings.ScrollOffset.y,
+
+            float verticalPoint = Mathf.Clamp(_view.localPosition.y,
+                _scrollSettings.MinScrollPoint.y - _scrollSettings.ScrollOffset.y,
                 _scrollSettings.MaxScrollPoint.y + _scrollSettings.ScrollOffset.y);
-            
+
             _view.localPosition = new Vector3(horizontalPoint, verticalPoint, _view.localPosition.z);
         }
 
@@ -129,11 +145,25 @@ namespace BratyUI.Element
             IsDragging = false;
         }
 
-        private void OnValidate()
+#if UNITY_EDITOR
+        protected override void OnValidate()
         {
+            base.OnValidate();
             _boxCollider = GetComponent<BoxCollider2D>();
         }
+#endif
     }
 
-    
+    [Serializable]
+    public class ScrollSettings
+    {
+        public float Speed = 1f;
+        public float Inertia = 5f;
+        public bool IsHorizontal;
+        public bool IsVertical;
+        public Vector2 MinScrollPoint;
+        public Vector2 MaxScrollPoint;
+        public Vector2 ScrollOffset;
+        public float Elasticity = 10f;
+    }
 }
