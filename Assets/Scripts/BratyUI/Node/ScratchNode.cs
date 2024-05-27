@@ -23,14 +23,33 @@ namespace BratyUI.Node
             var rightTop = NodeCanvas.GetAnchorPosition(_maxAnchor);
 
             var size = (Vector2)(rightTop - leftBottom);
-            _spriteRenderer.drawMode = SpriteDrawMode.Sliced;
-            _spriteRenderer.size = size + _sizeOffset;
 
             var position = (Vector2)leftBottom + size * 0.5f + _position;
             transform.localPosition = new Vector3(position.x, position.y, leftBottom.z);
             transform.localScale = Vector3.one;
             
+            _spriteRenderer.drawMode = SpriteDrawMode.Sliced;
+            _spriteRenderer.size = size + _sizeOffset;
             _collider.size = size + _sizeOffset;
         }
+        
+#if UNITY_EDITOR
+        protected override void DrawSelectedGizmos()
+        {
+            var localPosition = transform.localPosition;
+            var size = _collider.size;
+
+            Vector3 topLeft = new Vector3(localPosition.x - size.x / 2, localPosition.y + size.y / 2, 0);
+            Vector3 topRight = new Vector3(localPosition.x + size.x / 2, localPosition.y + size.y / 2, 0);
+            Vector3 bottomRight = new Vector3(localPosition.x + size.x / 2, localPosition.y - size.y / 2, 0);
+            Vector3 bottomLeft = new Vector3(localPosition.x - size.x / 2, localPosition.y - size.y / 2, 0);
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(topLeft, topRight);
+            Gizmos.DrawLine(topRight, bottomRight);
+            Gizmos.DrawLine(bottomRight, bottomLeft);
+            Gizmos.DrawLine(bottomLeft, topLeft);
+        }
+#endif
     }
 }
