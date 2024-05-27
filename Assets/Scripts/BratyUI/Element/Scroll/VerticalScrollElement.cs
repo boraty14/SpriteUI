@@ -3,10 +3,10 @@
 namespace BratyUI.Element.Scroll
 {
     public abstract class
-        VerticalScrollElement<TScrollItemElement, TScrollItemModel> : ScrollElementBase<TScrollItemElement,
-        TScrollItemModel>
-        where TScrollItemElement : ScrollItemElementBase
+        VerticalScrollElement<TScrollItemModel, TScrollItemElement> : ScrollElementBase<TScrollItemModel,
+        TScrollItemElement>
         where TScrollItemModel : ScrollItemModelBase
+        where TScrollItemElement : ScrollItemElementBase
     {
         public override void HandleDrag(Vector2 delta)
         {

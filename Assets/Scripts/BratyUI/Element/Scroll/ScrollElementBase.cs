@@ -2,28 +2,31 @@
 using System.Collections.Generic;
 using BratyUI.Element.Gesture;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace BratyUI.Element.Scroll
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BoxCollider2D))]
-    public abstract class ScrollElementBase<TScrollItemElement, TScrollItemModel> : MonoBehaviour, IDragElement
-        where TScrollItemElement : ScrollItemElementBase
+    [RequireComponent(typeof(SpriteRenderer))]
+    public abstract class ScrollElementBase<TScrollItemModel, TScrollItemElement> : MonoBehaviour, IDragElement
         where TScrollItemModel : ScrollItemModelBase
+        where TScrollItemElement : ScrollItemElementBase
     {
-        [SerializeField] private TScrollItemElement _scrollItemElement;
-        [SerializeField] private ScrollSettings _settings;
-        [SerializeField] private BoxCollider2D _collider;
-
+        [SerializeField] private TScrollItemElement _scrollItemElementPrefab;
+        [SerializeField] private ScrollSettings _scrollSettings;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+        [SerializeField] private BoxCollider2D _boxCollider;
+        
+        protected float ScrollPercentage;
+        
         private readonly List<TScrollItemModel> _models = new();
-        private float _scrollPercentage;
-
-        private float ScrollSize => _collider.size.y;
+        private ObjectPool<TScrollItemElement> _scrollItemElementPool;
 
         public bool IsScrollEnabled
         {
-            get => _collider.enabled;
-            set => _collider.enabled = value;
+            get => _boxCollider.enabled;
+            set => _boxCollider.enabled = value;
         }
 
         public abstract void HandleDrag(Vector2 delta);
@@ -34,15 +37,33 @@ namespace BratyUI.Element.Scroll
 
         private void Start()
         {
-            InitializeScrollElement();
+            InitScrollElement();
+            BuildScrollElement();
         }
 
-        protected virtual void InitializeScrollElement()
+        protected virtual void InitScrollElement()
+        {
+            _scrollItemElementPool = new ObjectPool<TScrollItemElement>(
+                CreateSetup,
+                GetSetup,
+                ReleaseSetup,
+                DestroySetup,
+                CollectionChecks,
+                InitialCount,
+                MaxCount);
+        }
+
+        protected virtual void BuildScrollElement()
         {
             
         }
 
-        public void ScrollToIndex(int index)
+        public void ScrollToIndex(int index, float duration)
+        {
+            
+        }
+        
+        public void ScrollToIndexImmediately(int index)
         {
             
         }
@@ -52,6 +73,7 @@ namespace BratyUI.Element.Scroll
         public void AddModel(TScrollItemModel scrollItemModel)
         {
             _models.Add(scrollItemModel);
+            BuildScrollElement();
         }
 
         public void InsertModel(int index, TScrollItemModel scrollItemModel)
@@ -63,6 +85,7 @@ namespace BratyUI.Element.Scroll
             }
 
             _models.Insert(index, scrollItemModel);
+            BuildScrollElement();
         }
 
         public void RemoveModelAtIndex(int index)
@@ -74,11 +97,18 @@ namespace BratyUI.Element.Scroll
             }
 
             _models.RemoveAt(index);
+            BuildScrollElement();
         }
 
         public bool RemoveModel(TScrollItemModel scrollItemModel)
         {
-            return _models.Remove(scrollItemModel);
+            bool isRemoved = _models.Remove(scrollItemModel);
+            if (isRemoved)
+            {
+                BuildScrollElement();
+            }
+
+            return isRemoved;
         }
 
         private bool IsModelIndexValid(int index)
@@ -87,11 +117,29 @@ namespace BratyUI.Element.Scroll
         }
 
         #endregion
+        
+        #region PoolOverrides
+        protected virtual TScrollItemElement CreateSetup() => Instantiate(_scrollItemElementPrefab);
+        protected virtual void GetSetup(TScrollItemElement scrollItemElement) => scrollItemElement.gameObject.SetActive(true);
+        protected virtual void ReleaseSetup(TScrollItemElement scrollItemElement) => scrollItemElement.gameObject.SetActive(false);
+        protected virtual void DestroySetup(TScrollItemElement scrollItemElement) => Destroy(scrollItemElement);
+        protected virtual bool CollectionChecks => false;
+        protected virtual int InitialCount => 5;
+        protected virtual int MaxCount => 20;
+        #endregion
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            _collider = GetComponent<BoxCollider2D>();
+            _boxCollider = GetComponent<BoxCollider2D>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            _boxCollider.size = _scrollSettings.Size;
+            _spriteRenderer.drawMode = SpriteDrawMode.Sliced;
+            _spriteRenderer.size = _scrollSettings.Size;
         }
 #endif
     }
@@ -104,7 +152,7 @@ namespace BratyUI.Element.Scroll
         public float EndMargin;
 
         [Header("Scroll")]
-        public bool IsReversed;
+        public Vector2 Size = Vector2.one;
         public float Speed = 1f;
         public float Inertia = 0.15f;
         public float Space = 0f;

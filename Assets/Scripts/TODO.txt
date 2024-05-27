@@ -1,8 +1,11 @@
 ﻿TODO
 - Add SCROLL
 - Add node manager -> set nodecamera of nodecanvas at init
+- horizontal cam pos to world and vice versa (forward line dogru intersection with point shortest)
+- how to handle reverse?
 
 NOTES
+- no model, just view pooling and set externally
 - make scroll way basic and simpler
 - move each element not parent
 

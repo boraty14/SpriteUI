@@ -2,5 +2,6 @@
 {
     public abstract class ScrollItemModelBase
     {
+        public float Size;
     }
 }
