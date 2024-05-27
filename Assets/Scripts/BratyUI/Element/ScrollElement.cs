@@ -54,27 +54,27 @@ namespace BratyUI.Element
             Vector3 targetPosition = position;
             bool isElastic = false;
 
-            if (position.x < _scrollSettings.MinScrollPoint.x)
-            {
-                targetPosition.x = _scrollSettings.MinScrollPoint.x;
-                isElastic = true;
-            }
-            else if (position.x > _scrollSettings.MaxScrollPoint.x)
-            {
-                targetPosition.x = _scrollSettings.MaxScrollPoint.x;
-                isElastic = true;
-            }
-
-            if (position.y < _scrollSettings.MinScrollPoint.y)
-            {
-                targetPosition.y = _scrollSettings.MinScrollPoint.y;
-                isElastic = true;
-            }
-            else if (position.y > _scrollSettings.MaxScrollPoint.y)
-            {
-                targetPosition.y = _scrollSettings.MaxScrollPoint.y;
-                isElastic = true;
-            }
+            // if (position.x < _scrollSettings.MinScrollPoint.x)
+            // {
+            //     targetPosition.x = _scrollSettings.MinScrollPoint.x;
+            //     isElastic = true;
+            // }
+            // else if (position.x > _scrollSettings.MaxScrollPoint.x)
+            // {
+            //     targetPosition.x = _scrollSettings.MaxScrollPoint.x;
+            //     isElastic = true;
+            // }
+            //
+            // if (position.y < _scrollSettings.MinScrollPoint.y)
+            // {
+            //     targetPosition.y = _scrollSettings.MinScrollPoint.y;
+            //     isElastic = true;
+            // }
+            // else if (position.y > _scrollSettings.MaxScrollPoint.y)
+            // {
+            //     targetPosition.y = _scrollSettings.MaxScrollPoint.y;
+            //     isElastic = true;
+            // }
 
             if (!isElastic)
             {
@@ -103,13 +103,13 @@ namespace BratyUI.Element
                 _view.localPosition += Vector3.right * delta.x;
             }
             
-            float horizontalPoint = Mathf.Clamp(_view.localPosition.x, _scrollSettings.MinScrollPoint.x - _scrollSettings.ScrollOffset.x,
-                _scrollSettings.MaxScrollPoint.x + _scrollSettings.ScrollOffset.x);
+            // float horizontalPoint = Mathf.Clamp(_view.localPosition.x, _scrollSettings.MinScrollPoint.x - _scrollSettings.ScrollOffset.x,
+            //     _scrollSettings.MaxScrollPoint.x + _scrollSettings.ScrollOffset.x);
+            //
+            // float verticalPoint = Mathf.Clamp(_view.localPosition.y, _scrollSettings.MinScrollPoint.y - _scrollSettings.ScrollOffset.y,
+            //     _scrollSettings.MaxScrollPoint.y + _scrollSettings.ScrollOffset.y);
             
-            float verticalPoint = Mathf.Clamp(_view.localPosition.y, _scrollSettings.MinScrollPoint.y - _scrollSettings.ScrollOffset.y,
-                _scrollSettings.MaxScrollPoint.y + _scrollSettings.ScrollOffset.y);
-            
-            _view.localPosition = new Vector3(horizontalPoint, verticalPoint, _view.localPosition.z);
+            //_view.localPosition = new Vector3(horizontalPoint, verticalPoint, _view.localPosition.z);
         }
 
         public void HandleDrag(Vector2 delta)

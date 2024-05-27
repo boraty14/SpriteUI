@@ -7,7 +7,6 @@ using UnityEditor;
 
 namespace BratyUI.Node
 {
-    [ExecuteAlways]
     [DisallowMultipleComponent]
     public abstract class NodeBase : MonoBehaviour
     {
@@ -16,7 +15,14 @@ namespace BratyUI.Node
         [SerializeField] private NodeBase _parentNode;
         private bool _isDirty;
 
+        public Vector2 Position => _nodeTransform.Position;
         public Vector2 TotalSize { get; private set; }
+
+        public void UpdatePosition(Vector2 position)
+        {
+            _nodeTransform.Position = position;
+            transform.localPosition = new Vector3(position.x, position.y, transform.localPosition.z);
+        }
 
         private void LateUpdate()
         {
@@ -62,10 +68,19 @@ namespace BratyUI.Node
                     childNode.DrawNode();
                 }
             }
+
+#if UNITY_EDITOR
+            EditorApplication.delayCall -= DrawCurrentNode;
+            EditorApplication.delayCall += DrawCurrentNode;
+#endif
         }
 
         protected virtual void DrawCurrentNode()
         {
+            _isDirty = false;
+#if UNITY_EDITOR
+            EditorApplication.delayCall -= DrawCurrentNode;
+#endif
         }
 
 #if UNITY_EDITOR
@@ -78,10 +93,7 @@ namespace BratyUI.Node
                 return;
             }
 
-            if (!Application.isPlaying)
-            {
-                DrawNode();
-            }
+            DrawNode();
 
             var localPosition = transform.localPosition;
 

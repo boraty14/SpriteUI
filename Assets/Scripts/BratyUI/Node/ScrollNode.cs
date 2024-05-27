@@ -9,7 +9,7 @@ namespace BratyUI.Node
     {
         [SerializeField] private ScrollSettings _scrollSettings;
         [SerializeField] private BoxCollider2D _boxCollider;
-        [SerializeField] private Transform _view;
+        [SerializeField] private NodeBase _viewNode;
 
         private Vector2 _velocity = Vector2.zero;
 
@@ -25,6 +25,36 @@ namespace BratyUI.Node
         {
             base.DrawCurrentNode();
             _boxCollider.size = TotalSize;
+        }
+
+        private void Start()
+        {
+            SetScrollPercentage(1f);
+        }
+
+        public void SetScrollPercentage(float percentage)
+        {
+            if (_viewNode == null)
+            {
+                return;
+            }
+
+            var localX = 0f;
+            var localY = 0f;
+
+            if (_scrollSettings.IsHorizontal)
+            {
+                float horizontalInterval = -(0.5f * _viewNode.TotalSize.x - 0.5f * TotalSize.x);
+                localX = Mathf.Lerp(horizontalInterval, -horizontalInterval, percentage);
+            }
+            
+            if (_scrollSettings.IsVertical)
+            {
+                float verticalInterval = -(0.5f * _viewNode.TotalSize.y - 0.5f * TotalSize.y);
+                localY = Mathf.Lerp(verticalInterval, -verticalInterval, percentage);
+            }
+            
+            _viewNode.UpdatePosition(new Vector2(localX,localY));
         }
 
         private void OnEnable()
@@ -54,34 +84,36 @@ namespace BratyUI.Node
                 _velocity = Vector2.zero;
             }
 
-            if (_view == null)
+            if (_viewNode == null)
             {
                 return;
             }
 
-            Vector3 position = _view.localPosition;
-            Vector3 targetPosition = position;
+            Vector2 position = _viewNode.Position;
+            Vector2 targetPosition = position;
             bool isElastic = false;
 
-            if (position.x < _scrollSettings.MinScrollPoint.x)
+            float horizontalInterval = (0.5f * _viewNode.TotalSize.x - 0.5f * TotalSize.x);
+            if (position.x < -horizontalInterval)
             {
-                targetPosition.x = _scrollSettings.MinScrollPoint.x;
+                targetPosition.x = -horizontalInterval;
                 isElastic = true;
             }
-            else if (position.x > _scrollSettings.MaxScrollPoint.x)
+            else if (position.x > horizontalInterval)
             {
-                targetPosition.x = _scrollSettings.MaxScrollPoint.x;
+                targetPosition.x = horizontalInterval;
                 isElastic = true;
             }
 
-            if (position.y < _scrollSettings.MinScrollPoint.y)
+            float verticalInterval = (0.5f * _viewNode.TotalSize.y - 0.5f * TotalSize.y);
+            if (position.y < -verticalInterval)
             {
-                targetPosition.y = _scrollSettings.MinScrollPoint.y;
+                targetPosition.y = -verticalInterval;
                 isElastic = true;
             }
-            else if (position.y > _scrollSettings.MaxScrollPoint.y)
+            else if (position.y > verticalInterval)
             {
-                targetPosition.y = _scrollSettings.MaxScrollPoint.y;
+                targetPosition.y = verticalInterval;
                 isElastic = true;
             }
 
@@ -90,42 +122,44 @@ namespace BratyUI.Node
                 return;
             }
 
-            Vector3 displacement = targetPosition - position;
+            Vector2 displacement = targetPosition - position;
             if (displacement.sqrMagnitude > 0.01f)
             {
-                _view.localPosition += displacement * (_scrollSettings.Elasticity * Time.deltaTime);
+                _viewNode.UpdatePosition(_viewNode.Position + (displacement * (_scrollSettings.Elasticity * Time.deltaTime)));
                 return;
             }
 
-            _view.localPosition = targetPosition;
+            _viewNode.UpdatePosition(targetPosition);
         }
 
         private void MoveView(Vector2 delta)
         {
-            if (_view == null)
+            if (_viewNode == null)
             {
                 return;
             }
 
             if (_scrollSettings.IsVertical)
             {
-                _view.localPosition += Vector3.up * delta.y;
+                _viewNode.UpdatePosition(_viewNode.Position + (Vector2.up * delta.y));
             }
 
             if (_scrollSettings.IsHorizontal)
             {
-                _view.localPosition += Vector3.right * delta.x;
+                _viewNode.UpdatePosition(_viewNode.Position + (Vector2.right * delta.x));
             }
 
-            float horizontalPoint = Mathf.Clamp(_view.localPosition.x,
-                _scrollSettings.MinScrollPoint.x - _scrollSettings.ScrollOffset.x,
-                _scrollSettings.MaxScrollPoint.x + _scrollSettings.ScrollOffset.x);
+            float horizontalInterval = (0.5f * _viewNode.TotalSize.x - 0.5f * TotalSize.x);
+            float horizontalPoint = Mathf.Clamp(_viewNode.Position.x,
+                -horizontalInterval - _scrollSettings.ScrollOffset.x,
+                horizontalInterval + _scrollSettings.ScrollOffset.x);
 
-            float verticalPoint = Mathf.Clamp(_view.localPosition.y,
-                _scrollSettings.MinScrollPoint.y - _scrollSettings.ScrollOffset.y,
-                _scrollSettings.MaxScrollPoint.y + _scrollSettings.ScrollOffset.y);
+            float verticalInterval = (0.5f * _viewNode.TotalSize.y - 0.5f * TotalSize.y);
+            float verticalPoint = Mathf.Clamp(_viewNode.Position.y,
+                -verticalInterval - _scrollSettings.ScrollOffset.y,
+                verticalInterval + _scrollSettings.ScrollOffset.y);
 
-            _view.localPosition = new Vector3(horizontalPoint, verticalPoint, _view.localPosition.z);
+            _viewNode.UpdatePosition(new Vector2(horizontalPoint, verticalPoint));
         }
 
         public void HandleDrag(Vector2 delta)
@@ -161,8 +195,6 @@ namespace BratyUI.Node
         public float Inertia = 5f;
         public bool IsHorizontal;
         public bool IsVertical;
-        public Vector2 MinScrollPoint;
-        public Vector2 MaxScrollPoint;
         public Vector2 ScrollOffset;
         public float Elasticity = 10f;
     }

@@ -9,6 +9,7 @@ namespace BratyUI.Node
 
         protected override void DrawCurrentNode()
         {
+            base.DrawCurrentNode();
             SetChildLayouts();
         }
 
